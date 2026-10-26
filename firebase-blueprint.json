@@ -1,0 +1,66 @@
+{
+  "entities": {
+    "Trainee": {
+      "title": "Trainee",
+      "description": "A female gym member/trainee registered in the system",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 100 },
+        "phone": { "type": "string", "maxLength": 30 },
+        "email": { "type": "string", "maxLength": 120 },
+        "secretCode": { "type": "string", "maxLength": 30 },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"] },
+        "goal": { "type": "string", "maxLength": 200 },
+        "fitnessLevel": { "type": "string", "maxLength": 50 },
+        "assignedCoach": { "type": "string", "maxLength": 100 },
+        "plan": { "type": "string", "maxLength": 100 },
+        "createdAt": { "type": "string", "maxLength": 50 },
+        "updatedAt": { "type": "string", "maxLength": 50 }
+      },
+      "required": ["name", "phone", "email", "secretCode", "status"]
+    },
+    "ChatMessage": {
+      "title": "ChatMessage",
+      "description": "A direct message between a trainee and the coach/captain",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "traineeId": { "type": "string", "maxLength": 128 },
+        "senderRole": { "type": "string", "enum": ["trainee", "coach", "system"] },
+        "senderName": { "type": "string", "maxLength": 100 },
+        "text": { "type": "string", "maxLength": 2000 },
+        "timestamp": { "type": "string", "maxLength": 50 },
+        "isRead": { "type": "boolean" }
+      },
+      "required": ["traineeId", "senderRole", "senderName", "text", "timestamp"]
+    },
+    "CoachProfile": {
+      "title": "CoachProfile",
+      "description": "Coach/Admin trainer details",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 100 },
+        "role": { "type": "string", "maxLength": 100 },
+        "bio": { "type": "string", "maxLength": 500 },
+        "specialties": { "type": "string", "maxLength": 300 }
+      },
+      "required": ["name", "role"]
+    }
+  },
+  "firestore": {
+    "/trainees/{traineeId}": {
+      "schema": { "$ref": "#/entities/Trainee" },
+      "description": "Stores registered member profiles and membership status"
+    },
+    "/trainees/{traineeId}/messages/{messageId}": {
+      "schema": { "$ref": "#/entities/ChatMessage" },
+      "description": "Private direct chat messages between the trainee and Captain"
+    },
+    "/coaches/{coachId}": {
+      "schema": { "$ref": "#/entities/CoachProfile" },
+      "description": "Gym captains and certified female fitness coaches"
+    }
+  }
+}

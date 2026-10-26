@@ -1,0 +1,6 @@
+{
+  "name": "Aura Ladies Fitness Club | أورا جيم النسائي الفاخر",
+  "description": "نادي رياضي نسائي متكامل فائق الفخامة والخصوصية - تدريب مخصص، بيلاتس ريفورمر، وشات خاص ومباشر بين المشتركة وكابتن التدريب بعد اعتماد الكود السري.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

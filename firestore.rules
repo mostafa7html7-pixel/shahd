@@ -1,0 +1,56 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Connection test document
+    match /test/connection {
+      allow read: if true;
+    }
+
+    // Trainees & Member Applications
+    match /trainees/{traineeId} {
+      // Anyone can register as a trainee
+      allow create: if request.resource.data.name is string 
+                    && request.resource.data.name.size() > 0
+                    && request.resource.data.name.size() <= 100
+                    && request.resource.data.phone is string
+                    && request.resource.data.phone.size() <= 30
+                    && request.resource.data.secretCode is string
+                    && request.resource.data.secretCode.size() <= 30
+                    && request.resource.data.status in ['pending', 'approved', 'rejected'];
+
+      // Trainees can read their record, Captain/Admin can list and view all
+      allow read: if true;
+
+      // Updating status, coach assignment, or notes (by Captain) or trainee updating profile
+      allow update: if true;
+      allow delete: if request.auth != null;
+
+      // Messages subcollection for 1-on-1 private chat with Captain
+      match /messages/{messageId} {
+        allow read: if true;
+        allow create: if request.resource.data.text is string
+                      && request.resource.data.text.size() > 0
+                      && request.resource.data.text.size() <= 2000
+                      && request.resource.data.senderRole in ['trainee', 'coach', 'system'];
+        allow update, delete: if request.auth != null;
+      }
+    }
+
+    // Coaches / Trainers
+    match /coaches/{coachId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    // Gym announcements / schedules
+    match /schedules/{scheduleId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+  }
+}
